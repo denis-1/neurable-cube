@@ -17,13 +17,15 @@
 
 <p style="color:#A00; font-weight: bold" id="message"></p>
 
-<p>In this example, we will rotate a cube with our mind</p>
+<p>In this example, we will rotate mickey mouse with our mind</p>
 
 <canvas width="800" height="500" id="cnvs" style="background-color:black"></canvas>
 
 <script src="lib/three.min.js"></script>
 <script src="lib/Detector.js"></script>
 <script src="lib/OBJLoader.js"></script>
+<script src="lib/OBJMTLLoader.js"></script>
+<script src="lib/DDSLoader.js"></script>
 
 <script type="text/javascript">
 
@@ -54,12 +56,34 @@ var rotateY = -0.5;  // rotation of cube about the y-axis
  */
 function createWorld() {
 
+  // OBJMTL model
+  /*
+  var onProgress = function ( xhr ) {
+    if ( xhr.lengthComputable ) {
+      var percentComplete = xhr.loaded / xhr.total * 100;
+      console.log( Math.round(percentComplete, 2) + '% downloaded' );
+    }
+  };
+  var onError = function ( xhr ) {
+  };
+  THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+  var loader = new THREE.OBJMTLLoader();
+  loader.load( 'models/mouse.obj', 'models/mouse.mtl', function ( object ) {
+      object.rotation.set(rotateX,rotateY,0);  // set initial rotation
+      object.scale.set(3,3,3);
+      object.position.y = -3;
+      scene.add( object );
+      }, onProgress, onError );
+      */
+
+
   // OBJ Model
   var onProgress = function ( xhr ) {
     if ( xhr.lengthComputable ) {
       var percentComplete = xhr.loaded / xhr.total * 100;
       console.log( Math.round(percentComplete, 2) + '% downloaded' );
     }
+       cube.rotation.set(rotateX,rotateY,0);
   };
   var onError = function ( xhr ) {
   };
@@ -107,22 +131,34 @@ function render() {
  *  An event listener for the keydown event.  It is installed by the init() function.
  */
 function doKey(evt) {
-    var rotationChanged = true;
-	switch (evt.keyCode) {
-	    case 37: rotateY -= 0.05; break;        // left arrow
-	    case 39: rotateY +=  0.05; break;       // right arrow
-	    case 38: rotateX -= 0.05; break;        // up arrow
-	    case 40: rotateX += 0.05; break;        // down arrow
-	    case 13: rotateX = rotateY = 0; break;  // return
-	    case 36: rotateX = rotateY = 0; break;  // home
-	    default: rotationChanged = false;
-	}
-	if (rotationChanged) {
-       target.rotation.set(rotateX,rotateY,0);
-       cube.rotation.set(rotateX,rotateY,0);
-       render();
-	   evt.preventDefault();
-	}
+  for (i = 0; i < 30; i++) {
+    window.setTimeout(function() {
+        doMove(evt);
+        }, 10*i);
+  }
+}
+
+/**
+ *  Move the mouse in a direction
+ */
+function doMove(evt) {
+  console.log('hi');
+  var rotationChanged = true;
+  switch (evt.keyCode) {
+    case 37: rotateY -= 0.05; break;        // left arrow
+    case 39: rotateY +=  0.05; break;       // right arrow
+    case 38: rotateX -= 0.05; break;        // up arrow
+    case 40: rotateX += 0.05; break;        // down arrow
+    case 13: rotateX = rotateY = 0; break;  // return
+    case 36: rotateX = rotateY = 0; break;  // home
+    default: rotationChanged = false;
+  }
+  if (rotationChanged) {
+    target.rotation.set(rotateX,rotateY,0);
+    cube.rotation.set(rotateX,rotateY,0);
+    render();
+    evt.preventDefault();
+  }
 }
 
 /**
