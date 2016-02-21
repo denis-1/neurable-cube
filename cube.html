@@ -41,6 +41,7 @@ var renderer;  // A three.js WebGL or Canvas renderer.
 var scene;     // The 3D scene that will be rendered, containing the cube.
 var camera;    // The camera that takes the picture of the scene.
 
+var target;
 var cube; // The three.js object that represents the cube.
 
 var rotateX = 0.4;   // rotation of cube about the x-axis
@@ -52,6 +53,26 @@ var rotateY = -0.5;  // rotation of cube about the y-axis
  *  objects have already been created.
  */
 function createWorld() {
+
+  // OBJ Model
+  var onProgress = function ( xhr ) {
+    if ( xhr.lengthComputable ) {
+      var percentComplete = xhr.loaded / xhr.total * 100;
+      console.log( Math.round(percentComplete, 2) + '% downloaded' );
+    }
+  };
+  var onError = function ( xhr ) {
+  };
+  var loader = new THREE.OBJLoader();
+  loader.load( 'models/mouse.obj', function ( object ) {
+      object.scale.set(3,3,3);
+      object.position.y = -3;
+      object.rotation.set(rotateX,rotateY,0);  // set initial rotation
+      scene.add( object );
+      target = object;
+      }, onProgress, onError );
+
+    // Cube
     var cubeGeometry = new THREE.CubeGeometry(10,10,10);
     var cubeMaterial = new THREE.MeshFaceMaterial( [  // one material for each face
             new THREE.MeshLambertMaterial( { color: "green" } ),   // +x face of cube
@@ -63,10 +84,12 @@ function createWorld() {
         ] );
     cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
     cube.rotation.set(rotateX,rotateY,0);  // set initial rotation
-    scene.add(cube);
-    var light;  // A light shining from the direction of the camera.
-    light = new THREE.DirectionalLight();
-    light.position.set(0,0,1);
+    //scene.add(cube);
+
+    var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+    light.position.set( 0.5, 1, 0.75 );
+    scene.add( light );
+
     scene.add(light);
 }
 
@@ -95,7 +118,8 @@ function doKey(evt) {
 	    default: rotationChanged = false;
 	}
 	if (rotationChanged) {
-       cube.rotation.set(rotateX,rotateY,0);	
+       target.rotation.set(rotateX,rotateY,0);
+       cube.rotation.set(rotateX,rotateY,0);
        render();
 	   evt.preventDefault();
 	}
