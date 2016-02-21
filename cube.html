@@ -4,7 +4,27 @@
 <meta charset="UTF-8">
 <title>Neurable 3D Motion Example</title>
 
-<script type="text/javascript" src="lib/three.min.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body onload="init()" cz-shortcut-listen="true">
+
+<h1>Neurable 3D Motion Example</h1>
+
+<noscript>
+&lt;p style="color: #A00; font-weight: bold"&gt;Sorry, but this page requires JavaScript!&lt;/p&gt;
+</noscript>
+
+<p style="color:#A00; font-weight: bold" id="message"></p>
+
+<p>In this example, we will rotate a cube with our mind</p>
+
+<canvas width="800" height="500" id="cnvs" style="background-color:black"></canvas>
+
+<script src="lib/three.min.js"></script>
+<script src="lib/Detector.js"></script>
+<script src="lib/OBJLoader.js"></script>
+
 <script type="text/javascript">
 
 /*  Show a cube with six differently colored sides using Three.js.
@@ -111,7 +131,7 @@ function init() {
             document.getElementById("message").innerHTML =
                           "WebGL not available; falling back to CanvasRenderer.";
         }
-        renderer.setClearColor(0x220033);  // dark violet background
+        renderer.setClearColor(0xf9f9f9);  // dark violet background
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(45, theCanvas.width/theCanvas.height, 0.1, 100);
         camera.position.z = 25;
@@ -125,21 +145,6 @@ function init() {
 }
 
 </script>
-</head>
-<body onload="init()" cz-shortcut-listen="true">
 
-<title>Neurable 3D Motion Example</title>
-
-<noscript>
-&lt;p style="color: #A00; font-weight: bold"&gt;Sorry, but this page requires JavaScript!&lt;/p&gt;
-</noscript>
-
-<p style="color:#A00; font-weight: bold" id="message"></p>
-
-<p>In this example, we will rotate a cube with our mind</p>
-
-<canvas width="1000" height="600" id="cnvs" style="background-color:black"></canvas>
-
-
-
-</body></html>
+</body>
+</html>
