@@ -20,32 +20,54 @@ var rotateY = -0.5;  // rotation of cube about the y-axis
  *  objects have already been created.
  */
 function createWorld() {
+
   // Parent
   parent = new THREE.Object3D();
   scene.add(parent);
+
+  // PLY Model
+  var loader = new THREE.PLYLoader();
+  loader.load( 'models/epic.ply', function ( geometry ) {
+
+    geometry.computeFaceNormals();
+
+    var material = new THREE.MeshStandardMaterial( { color: 0x0055ff } );
+    var mesh = new THREE.Mesh( geometry, material );
+
+    mesh.position.y = -5;
+    mesh.scale.set(1200,1200,1200);
+
+    mesh.scale.multiplyScalar( 0.001 );
+
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    //parent.add( mesh );
+
+  } );
+
   // OBJMTL model
-  /*
-     var onProgress = function ( xhr ) {
-     if ( xhr.lengthComputable ) {
-     var percentComplete = xhr.loaded / xhr.total * 100;
-     console.log( Math.round(percentComplete, 2) + '% downloaded' );
-     }
-     };
-     var onError = function ( xhr ) { };
-     THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
-     var mtlLoader = new THREE.MTLLoader();
-     mtlLoader.load( 'models/Mickey_Mouse.mtl', function( materials ) {
-     materials.preload();
-     var objLoader = new THREE.OBJLoader();
-  //objLoader.setMaterials( materials );
-  objLoader.load( 'models/Mickey_Mouse.obj', function ( object ) {
-  object.rotation.set(0.2,0.2,0);  // set initial rotation
-  object.scale.set(4,4,4);
-  object.position.y = -5;
-  parent.add( object );
-  }, onProgress, onError );
+  var onProgress = function ( xhr ) {
+    if ( xhr.lengthComputable ) {
+      var percentComplete = xhr.loaded / xhr.total * 100;
+      console.log( Math.round(percentComplete, 2) + '% downloaded' );
+    }
+  };
+  var onError = function ( xhr ) { };
+  THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+  var mtlLoader = new THREE.MTLLoader();
+  mtlLoader.load( 'models/KingdomKey.mtl', function( materials ) {
+    materials.preload();
+    var objLoader = new THREE.OBJLoader();
+    objLoader.setMaterials( materials );
+    objLoader.load( 'models/KingdomKey.obj', function ( object ) {
+      object.rotation.set(0.2,0.2,0);  // set initial rotation
+      object.scale.set(0.6,0.6,0.6);
+      object.position.y = -5;
+      //parent.add( object );
+    }, onProgress, onError );
   });
-  */
+
   // OBJ Model
   var onProgress = function ( xhr ) {
     if ( xhr.lengthComputable ) {
@@ -63,6 +85,7 @@ function createWorld() {
     object.position.y = -5;
     parent.add( object );
   }, onProgress, onError );
+
   // Cube
   var cubeGeometry = new THREE.CubeGeometry(10,10,10);
   var cubeMaterial = new THREE.MeshFaceMaterial( [  // one material for each face
@@ -76,10 +99,11 @@ function createWorld() {
   cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
   cube.rotation.set(rotateX,rotateY,0);  // set initial rotation
   //scene.add(cube);
-  var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+
+  var light = new THREE.HemisphereLight( 0x0a0a0a, 0x777788, 0.75 );
   light.position.set( 0.5, 1, 0.75 );
   scene.add( light );
-  scene.add(light);
+
 }
 /**
  *  The render fucntion creates an image of the scene from the point of view
@@ -159,7 +183,7 @@ function init() {
       document.getElementById("message").innerHTML =
         "WebGL not available; falling back to CanvasRenderer.";
     }
-    renderer.setClearColor(0xf9f9f9);  // dark violet background
+    renderer.setClearColor(0xffffff);  // dark violet background
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(45, theCanvas.width/theCanvas.height, 0.1, 100);
     camera.position.z = 25;
