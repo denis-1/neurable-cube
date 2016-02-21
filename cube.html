@@ -118,23 +118,31 @@ function render() {
  *  An event listener for the keydown event.  It is installed by the init() function.
  */
 function doKey(evt) {
-  for (i = 0; i < 30; i++) {
-    window.setTimeout(function() {
-        doMove(evt);
-        }, 10*i);
+  var id = window.setTimeout(function() {}, 0);
+  while (id--) {
+        window.clearTimeout(id); // will do nothing if no timeout with id is present
+  }
+  var duration = 1000;
+  for (i = 0; i < duration; i++) {
+    window.setTimeout(function(which) {
+        var degree = (duration - which)/duration;
+        degree = Math.exp(degree)-1;
+        doMove(evt, degree);
+        }, 5*i, i);
   }
 }
 
 /**
  *  Move the mouse in a direction
  */
-function doMove(evt) {
+function doMove(evt, degree = 1) {
   var rotationChanged = true;
+  var amount = 0.02*degree;
   switch (evt.keyCode) {
-    case 37: rotateY -= 0.05; break;        // left arrow
-    case 39: rotateY +=  0.05; break;       // right arrow
-    case 38: rotateX -= 0.05; break;        // up arrow
-    case 40: rotateX += 0.05; break;        // down arrow
+    case 37: rotateY -= amount; break;        // left arrow
+    case 39: rotateY += amount; break;       // right arrow
+    case 38: rotateX -= amount; break;        // up arrow
+    case 40: rotateX += amount; break;        // down arrow
     case 13: rotateX = rotateY = 0; break;  // return
     case 36: rotateX = rotateY = 0; break;  // home
     default: rotationChanged = false;
