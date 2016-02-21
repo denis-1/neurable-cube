@@ -1,7 +1,7 @@
 # 
 # 
-mtllib mouse.mtl
-o mouse
+mtllib Mickey_Mouse.mtl
+o MickeyMouse
 v -0.283628 2.931106 -0.140772
 v -0.228730 2.855558 -0.135154
 v -0.346710 2.856239 -0.160498

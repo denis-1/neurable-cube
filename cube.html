@@ -22,10 +22,10 @@
 <canvas width="500" height="500" id="cnvs" style="background-color:black"></canvas>
 
 <script src="lib/three.min.js"></script>
-<script src="lib/Detector.js"></script>
-<script src="lib/OBJLoader.js"></script>
-<script src="lib/OBJMTLLoader.js"></script>
 <script src="lib/DDSLoader.js"></script>
+<script src="lib/MTLLoader.js"></script>
+<script src="lib/OBJLoader.js"></script>
+<script src="lib/Detector.js"></script>
 
 <script type="text/javascript">
 
@@ -62,64 +62,46 @@ function createWorld() {
   scene.add(parent);
 
   // OBJMTL model
-  /*
   var onProgress = function ( xhr ) {
     if ( xhr.lengthComputable ) {
       var percentComplete = xhr.loaded / xhr.total * 100;
       console.log( Math.round(percentComplete, 2) + '% downloaded' );
     }
   };
-  var onError = function ( xhr ) {
-  };
+  var onError = function ( xhr ) { };
   THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
-  var loader = new THREE.OBJMTLLoader();
-  loader.load( 'models/mouse.obj', 'models/mouse.mtl', function ( object ) {
-      object.rotation.set(rotateX,rotateY,0);  // set initial rotation
-      object.scale.set(3,3,3);
-      object.position.y = -3;
-      scene.add( object );
-      }, onProgress, onError );
-      */
+  var mtlLoader = new THREE.MTLLoader();
+  mtlLoader.load( 'models/Mickey_Mouse.mtl', function( materials ) {
+      materials.preload();
+      var objLoader = new THREE.OBJLoader();
+      //objLoader.setMaterials( materials );
+      objLoader.load( 'models/Mickey_Mouse.obj', function ( object ) {
+        object.rotation.set(0.2,0.2,0);  // set initial rotation
+        object.scale.set(4,4,4);
+        object.position.y = -5;
+        parent.add( object );
+        }, onProgress, onError );
+      });
 
+  // Cube
+  var cubeGeometry = new THREE.CubeGeometry(10,10,10);
+  var cubeMaterial = new THREE.MeshFaceMaterial( [  // one material for each face
+      new THREE.MeshLambertMaterial( { color: "green" } ),   // +x face of cube
+      new THREE.MeshLambertMaterial( { color: "magenta" } ), // -x face of cube
+      new THREE.MeshLambertMaterial( { color: "blue" } ),    // +y face of cube
+      new THREE.MeshLambertMaterial( { color: "yellow" } ),  // -y face of cube
+      new THREE.MeshLambertMaterial( { color: "red" } ),     // +z face of cube
+      new THREE.MeshLambertMaterial( { color: "cyan" } )     // -z face of cube
+      ] );
+  cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+  cube.rotation.set(rotateX,rotateY,0);  // set initial rotation
+  //scene.add(cube);
 
-  // OBJ Model
-  var onProgress = function ( xhr ) {
-    if ( xhr.lengthComputable ) {
-      var percentComplete = xhr.loaded / xhr.total * 100;
-      console.log( Math.round(percentComplete, 2) + '% downloaded' );
-    }
-       cube.rotation.set(rotateX,rotateY,0);
-  };
-  var onError = function ( xhr ) {
-  };
-  var loader = new THREE.OBJLoader();
-  loader.load( 'models/mouse.obj', function ( object ) {
-      object.scale.set(4,4,4);
-      object.position.y = -5;
-      object.rotation.set(0.1,0.1,0);  // set initial rotation
-      parent.add( object );
-      target = object;
-      }, onProgress, onError );
+  var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+  light.position.set( 0.5, 1, 0.75 );
+  scene.add( light );
 
-    // Cube
-    var cubeGeometry = new THREE.CubeGeometry(10,10,10);
-    var cubeMaterial = new THREE.MeshFaceMaterial( [  // one material for each face
-            new THREE.MeshLambertMaterial( { color: "green" } ),   // +x face of cube
-            new THREE.MeshLambertMaterial( { color: "magenta" } ), // -x face of cube
-            new THREE.MeshLambertMaterial( { color: "blue" } ),    // +y face of cube
-            new THREE.MeshLambertMaterial( { color: "yellow" } ),  // -y face of cube
-            new THREE.MeshLambertMaterial( { color: "red" } ),     // +z face of cube
-            new THREE.MeshLambertMaterial( { color: "cyan" } )     // -z face of cube
-        ] );
-    cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-    cube.rotation.set(rotateX,rotateY,0);  // set initial rotation
-    //scene.add(cube);
-
-    var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-    light.position.set( 0.5, 1, 0.75 );
-    scene.add( light );
-
-    scene.add(light);
+  scene.add(light);
 }
 
 /**
