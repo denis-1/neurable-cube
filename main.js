@@ -110,7 +110,7 @@ function doKey(evt) {
 /**
  *  Move the mouse in a direction
  */
-function doMove(evt, degree = 1) {
+function doMove(evt, degree) {
   var rotationChanged = true;
   var amount = 0.02*degree;
   switch (evt.keyCode) {
